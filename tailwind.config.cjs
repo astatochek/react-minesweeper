@@ -7,7 +7,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'minesweeper-gray': 'rgb(192,192,192)',
+        'ms-gray': 'rgb(192,192,192)',
+      },
+      spacing: {
+        'ms-22': '1.375rem',
+        'ms-24': '1.5rem',
+        'ms-l-40': '12rem'
       },
     },
   },
