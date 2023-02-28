@@ -10,6 +10,7 @@ import cornerMidLeft from "./../../assets/t_left_2x.png";
 import cornerMidRight from "./../../assets/t_right_2x.png";
 import cornerBottomLeft from "./../../assets/corner_bottom-left-2x.png";
 import cornerBottomRigth from "./../../assets/corner_bottom-right-2x.png";
+import FieldComponent from "./Field/Field";
 
 export default function GameComponent() {
   return (
@@ -59,9 +60,7 @@ export default function GameComponent() {
             className="w-ms-24 h-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
           />
-          <div className="w-ms-field-size-16x16 h-ms-field-size-16x16 bg-ms-gray">
-            {/* 40 x 40 ITEMS */}
-          </div>
+          <FieldComponent />
           <div
             className="w-ms-24 h-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}

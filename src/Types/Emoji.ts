@@ -1,1 +1,1 @@
-export type EmojiType = 'active' | 'lose' | 'pressed' | 'unpressed';
+export type EmojiType = 'active' | 'lose' | 'pressed' | 'unpressed' | 'win';

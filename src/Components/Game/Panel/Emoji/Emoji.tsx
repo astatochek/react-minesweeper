@@ -4,6 +4,7 @@ import activeEmoji from "../../../../assets/face_active.svg";
 import loseEmoji from "../../../../assets/face_lose.svg";
 import pressedEmoji from "../../../../assets/face_pressed.svg";
 import unpressedEmoji from "../../../../assets/face_unpressed.svg";
+import winEmoji from "../../../../assets/face_win.svg";
 
 import { EmojiType } from "../../../../Types/Emoji";
 
@@ -26,6 +27,9 @@ export default function EmojiComponent({ emoji }: Props) {
       break;
     case "unpressed":
       currentEmoji = unpressedEmoji;
+      break;
+    case "win":
+      currentEmoji = winEmoji;
       break;
   }
 
