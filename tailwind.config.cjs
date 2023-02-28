@@ -12,7 +12,8 @@ module.exports = {
       spacing: {
         'ms-22': '1.375rem',
         'ms-24': '1.5rem',
-        'ms-l-40': '12rem'
+        'ms-field-size': '16.5rem',
+        'ms-panel': '4rem',
       },
     },
   },
