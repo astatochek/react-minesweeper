@@ -21,7 +21,7 @@ export default function GameComponent() {
             <img src={cornerUpLeft}></img>
           </div>
           <div
-            className="h-full w-ms-field-size"
+            className="h-full w-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
           />
           <div className="w-ms-24 h-full">
@@ -46,7 +46,7 @@ export default function GameComponent() {
             <img src={cornerMidLeft}></img>
           </div>
           <div
-            className="h-full w-ms-field-size"
+            className="h-full w-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
           />
           <div className="w-ms-24 h-full">
@@ -54,16 +54,16 @@ export default function GameComponent() {
           </div>
         </div>
         {/* FIELD */}
-        <div className="h-ms-field-size flex flex-row justify-start">
+        <div className="h-ms-field-size-16x16 flex flex-row justify-start">
           <div
-            className="w-ms-24 h-ms-field-size"
+            className="w-ms-24 h-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
           />
-          <div className="w-ms-field-size h-ms-field-size bg-ms-gray">
+          <div className="w-ms-field-size-16x16 h-ms-field-size-16x16 bg-ms-gray">
             {/* 40 x 40 ITEMS */}
           </div>
           <div
-            className="w-ms-24 h-ms-field-size"
+            className="w-ms-24 h-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
           />
         </div>
@@ -73,7 +73,7 @@ export default function GameComponent() {
             <img src={cornerBottomLeft}></img>
           </div>
           <div
-            className="h-full w-ms-field-size"
+            className="h-full w-ms-field-size-16x16"
             style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
           />
           <div className="w-ms-24 h-full">
