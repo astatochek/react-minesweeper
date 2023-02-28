@@ -7,7 +7,7 @@ export default function WindowComponent() {
         <div className="mb-14 text-3xl text-center font-bold underline">
             <h1>Cool Title</h1>
         </div>
-        <div className="flex flex-col sm:flex-row">
+        <div className="flex flex-col sm:flex-row w-4">
             <GameComponent />
         </div>
     </div>
