@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import closed from "../../../../assets/closed.svg";
 import closedFlag from "../../../../assets/closed_flag.svg";
@@ -18,12 +18,15 @@ import type7 from "../../../../assets/type7.svg";
 import type8 from "../../../../assets/type8.svg";
 
 import { CellType } from "../../../../Types/Cell";
+import { CellDataType } from "../../../../Types/CellData";
 
 type Props = {
-  type: CellType;
+  cell: CellDataType;
+  index: number;
+  handleLeftClick: (index: number) => void;
 };
 
-export default function CellComponent({ type }: Props) {
+export default function CellComponent({ cell, index, handleLeftClick }: Props) {
   function getImageSource(type: CellType): string {
     switch (type) {
       case "closed":
@@ -63,11 +66,14 @@ export default function CellComponent({ type }: Props) {
     }
   }
 
-  const src = getImageSource(type);
-
   return (
-    <div className="h-ms-cell">
-      <img className="h-full" src={src}></img>
+    <div
+      className="h-ms-cell"
+      onClick={() => {
+        handleLeftClick(index);
+      }}
+    >
+      <img className="h-full" src={getImageSource(cell.type)}></img>
     </div>
   );
 }

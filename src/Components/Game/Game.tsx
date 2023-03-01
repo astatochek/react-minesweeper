@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 
 import PanelComponent from "./Panel/Panel";
 
@@ -9,10 +9,14 @@ import borderVertical from "./../../assets/border_vert_2x.png";
 import cornerMidLeft from "./../../assets/t_left_2x.png";
 import cornerMidRight from "./../../assets/t_right_2x.png";
 import cornerBottomLeft from "./../../assets/corner_bottom-left-2x.png";
-import cornerBottomRigth from "./../../assets/corner_bottom-right-2x.png";
+import cornerBottomRight from "./../../assets/corner_bottom-right-2x.png";
 import FieldComponent from "./Field/Field";
+import { ClickInfoType } from "../../Types/ClickContext";
+import ClickContext, { ClickContextType } from "../../Context/Click";
 
 export default function GameComponent() {
+  const [clickInfo, setClickInfo] = useState<ClickInfoType>({ id: 0, index: -1, type: "left" });
+
   return (
     <>
       <div className="flex flex-col justify-start items-center">
@@ -23,7 +27,10 @@ export default function GameComponent() {
           </div>
           <div
             className="h-full w-ms-field-size-16x16"
-            style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderHorizontal})`,
+              backgroundSize: "100% 100%",
+            }}
           />
           <div className="w-ms-24 h-full">
             <img src={cornerUpRight}></img>
@@ -33,12 +40,18 @@ export default function GameComponent() {
         <div className="flex flex-row justify-start">
           <div
             className="w-ms-24 h-ms-panel"
-            style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderVertical})`,
+              backgroundSize: "100% 100%",
+            }}
           />
           <PanelComponent />
           <div
             className="w-ms-24 h-panel"
-            style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderVertical})`,
+              backgroundSize: "100% 100%",
+            }}
           />
         </div>
         {/* MID BORDER */}
@@ -48,7 +61,10 @@ export default function GameComponent() {
           </div>
           <div
             className="h-full w-ms-field-size-16x16"
-            style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderHorizontal})`,
+              backgroundSize: "100% 100%",
+            }}
           />
           <div className="w-ms-24 h-full">
             <img src={cornerMidRight}></img>
@@ -58,12 +74,20 @@ export default function GameComponent() {
         <div className="h-ms-field-size-16x16 flex flex-row justify-start">
           <div
             className="w-ms-24 h-ms-field-size-16x16"
-            style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderVertical})`,
+              backgroundSize: "100% 100%",
+            }}
           />
-          <FieldComponent />
+          <ClickContext.Provider value={{ clickInfo, setClickInfo }}>
+            <FieldComponent />
+          </ClickContext.Provider>
           <div
             className="w-ms-24 h-ms-field-size-16x16"
-            style={{ backgroundImage: `url(${borderVertical})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderVertical})`,
+              backgroundSize: "100% 100%",
+            }}
           />
         </div>
         {/* BOTTOM BORDER */}
@@ -73,10 +97,13 @@ export default function GameComponent() {
           </div>
           <div
             className="h-full w-ms-field-size-16x16"
-            style={{ backgroundImage: `url(${borderHorizontal})`, backgroundSize: '100% 100%' }}
+            style={{
+              backgroundImage: `url(${borderHorizontal})`,
+              backgroundSize: "100% 100%",
+            }}
           />
           <div className="w-ms-24 h-full">
-            <img src={cornerBottomRigth}></img>
+            <img src={cornerBottomRight}></img>
           </div>
         </div>
       </div>

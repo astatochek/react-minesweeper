@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useMemo, useEffect } from "react";
+import ClickContext from "../../../Context/Click";
 import { CellType } from "../../../Types/Cell";
-import { FieldType } from "../../../Types/Field";
+import { CellDataType } from "../../../Types/CellData";
 import CellComponent from "./Cell/Cell";
+import { ClickInfoType } from "../../../Types/ClickContext";
 
 export default function FieldComponent() {
   const size = 16;
   const numOfMines = 40;
+
+  const { clickInfo, setClickInfo } = useContext(ClickContext);
 
   function isValidIndex(index: number) {
     return index >= 0 && index < size * size;
@@ -13,11 +17,7 @@ export default function FieldComponent() {
 
   function getShift(index: number): number[] {
     if (!(index >= 0 && index < size * size)) {
-      console.error(
-        `Value must be less than or equal to ${
-          size * size
-        } but ${index} was provided`
-      );
+      console.error("Invalid Input");
       return [];
     }
 
@@ -40,7 +40,7 @@ export default function FieldComponent() {
     else if (index < size) return shifts.top;
     else if (index >= size * (size - 1)) return shifts.bottom;
     else if (index % size === 0) return shifts.left;
-    else if (index % size === 1) return shifts.right;
+    else if (index % size === size - 1) return shifts.right;
 
     return shifts.standard;
   }
@@ -59,39 +59,79 @@ export default function FieldComponent() {
     return indices;
   }
 
-  function initializeField(firstClickIndex: number): FieldType {
+  function openedCellIfAllowed(cell: CellDataType): CellDataType {
+    if (cell.closed && !cell.hasMine) {
+      return {
+        type: `type ${cell.minesNear}`,
+        hasMine: cell.hasMine,
+        minesNear: cell.minesNear,
+        closed: false,
+      };
+    }
+    return cell;
+  }
+
+  function openNearCells(fieldData: CellDataType[], index: number) {
+    console.log("Entered openNearCells");
+    if (!fieldData[index].closed) return;
+    fieldData[index] = openedCellIfAllowed(fieldData[index]);
+    if (!fieldData[index].closed && fieldData[index].minesNear === 0) {
+      const availableShifts = getShift(index);
+      availableShifts.forEach((shift) =>
+        openNearCells(fieldData, index + shift)
+      );
+    }
+  }
+
+  function openedMine(cell: CellDataType): CellDataType {
+    if (!cell.hasMine || !cell.closed) return cell;
+    return {
+      type: "mine",
+      hasMine: cell.hasMine,
+      minesNear: cell.minesNear,
+      closed: false,
+    };
+  }
+
+  function updateField(fieldData: CellDataType[], index: number) {
+    if (fieldData[index].hasMine) {
+      fieldData[index] = openedMine(fieldData[index]);
+    } else {
+      openNearCells(fieldData, index);
+    }
+    
+  }
+
+  function initializeField(firstClickIndex: number): CellDataType[] {
     const mineIndices = getMineIndices(numOfMines, firstClickIndex);
 
-    let field: FieldType = new Array(size * size).fill(null).map(() => {
-      return { type: "pressed", hasMine: false, minesNear: 0, closed: true };
+    let field: CellDataType[] = new Array(size * size).fill(null).map(() => {
+      return { type: "closed", hasMine: false, minesNear: 0, closed: true };
     });
 
     mineIndices.forEach((index) => {
-      field[index].type = "mine";
+      // field[index].type = "mine";
       field[index].hasMine = true;
 
       const availableShifts = getShift(index);
 
       availableShifts.forEach((shift) => {
-        if (index + shift < 0 || index + shift >= size * size) {
-          console.log(index, shift);
-        }
         if (!field[index + shift].hasMine) {
           field[index + shift].minesNear++;
         }
       });
     });
 
-    field.forEach((cell) => {
-      if (!cell.hasMine) {
-        cell.type = `type ${cell.minesNear}`;
-      }
-    });
+    // field.forEach((cell) => {
+    //   if (!cell.hasMine) {
+    //     cell.type = `type ${cell.minesNear}`;
+    //   }
+    // });
 
     return field;
   }
 
-  const [field, setField] = useState<FieldType>(initializeField(0));
+  const [field, setField] = useState<CellDataType[]>(initializeField(0));
 
   const availableCellTypes: CellType[] = [
     "closed",
@@ -118,11 +158,42 @@ export default function FieldComponent() {
     ];
   }
 
-  return (
-    <div className="w-ms-field-size-16x16 h-ms-field-size-16x16 bg-ms-gray grid grid-cols-16">
-      {field.map(({ type }, i) => (
-        <CellComponent type={type} key={i} />
-      ))}
-    </div>
-  );
+  function handleLeftClick(index: number) {
+    console.log("Clicked on:", index);
+    setClickInfo((prevClickInfo) => {
+      const thisClickInfo: ClickInfoType = {
+        id: prevClickInfo.id + 1,
+        index: index,
+        type: "left",
+      };
+      return thisClickInfo;
+    });
+  }
+
+  useEffect(() => {
+    console.log("Received Click:", clickInfo);
+    if (!isValidIndex(clickInfo.index) || !field[clickInfo.index].closed) return;
+    if (clickInfo.type === "left") {
+      setField((prevField) => {
+        const nextField = [...prevField];
+        updateField(nextField, clickInfo.index);
+        return nextField;
+      });
+    }
+  }, [clickInfo]);
+
+  return useMemo(() => {
+    return (
+      <div className="w-ms-field-size-16x16 h-ms-field-size-16x16 bg-ms-gray grid grid-cols-16">
+        {field.map((cell, i) => (
+          <CellComponent
+            cell={cell}
+            index={i}
+            handleLeftClick={handleLeftClick}
+            key={i}
+          />
+        ))}
+      </div>
+    );
+  }, [field]);
 }
