@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import closed from "../../../../assets/closed.svg";
 import closedFlag from "../../../../assets/closed_flag.svg";
@@ -27,8 +27,14 @@ type Props = {
 };
 
 export default function CellComponent({ cell, index, handleLeftClick }: Props) {
-  function getImageSource(type: CellType): string {
-    switch (type) {
+  const [type, setType] = useState<CellType>("closed");
+
+  useEffect(() => {
+    setType(() => cell.type);
+  }, [cell]);
+
+  function getImageSource(thisType: CellType): string {
+    switch (thisType) {
       case "closed":
         return closed;
       case "closed flag":
@@ -66,14 +72,31 @@ export default function CellComponent({ cell, index, handleLeftClick }: Props) {
     }
   }
 
+  function handlePointerDown(event: React.PointerEvent) {
+    if (!cell.closed) return;
+    switch (event.button) {
+      case 1:
+        setType(() => "pressed");
+        break;
+      case 2:
+        console.log("received Right-Click");
+        break;
+    }
+  }
+
+  function handleClick() {
+    if (cell.closed) {
+      handleLeftClick(index);
+    }
+  }
+
   return (
     <div
       className="h-ms-cell"
-      onClick={() => {
-        handleLeftClick(index);
-      }}
+      onClick={handleClick}
+      onPointerDown={handlePointerDown}
     >
-      <img className="h-full" src={getImageSource(cell.type)}></img>
+      <img className="h-full" src={getImageSource(type)}></img>
     </div>
   );
 }

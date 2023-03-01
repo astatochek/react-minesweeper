@@ -72,7 +72,6 @@ export default function FieldComponent() {
   }
 
   function openNearCells(fieldData: CellDataType[], index: number) {
-    console.log("Entered openNearCells");
     if (!fieldData[index].closed) return;
     fieldData[index] = openedCellIfAllowed(fieldData[index]);
     if (!fieldData[index].closed && fieldData[index].minesNear === 0) {
@@ -159,7 +158,6 @@ export default function FieldComponent() {
   }
 
   function handleLeftClick(index: number) {
-    console.log("Clicked on:", index);
     setClickInfo((prevClickInfo) => {
       const thisClickInfo: ClickInfoType = {
         id: prevClickInfo.id + 1,
