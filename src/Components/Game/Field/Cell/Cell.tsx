@@ -23,10 +23,10 @@ import { CellDataType } from "../../../../Types/CellData";
 type Props = {
   cell: CellDataType;
   index: number;
-  handleLeftClick: (index: number) => void;
+  handleClick: (index: number, type: "left" | "right") => void;
 };
 
-export default function CellComponent({ cell, index, handleLeftClick }: Props) {
+export default function CellComponent({ cell, index, handleClick }: Props) {
   const [type, setType] = useState<CellType>("closed");
 
   useEffect(() => {
@@ -79,21 +79,21 @@ export default function CellComponent({ cell, index, handleLeftClick }: Props) {
         setType(() => "pressed");
         break;
       case 2:
-        console.log("received Right-Click");
+        handleClick(index, "right")
         break;
     }
   }
 
-  function handleClick() {
-    if (cell.closed) {
-      handleLeftClick(index);
+  function handleClickEvent() {
+    if (cell.closed && cell.type !== "closed flag") {
+      handleClick(index, "left");
     }
   }
 
   return (
     <div
       className="h-ms-cell"
-      onClick={handleClick}
+      onClick={handleClickEvent}
       onPointerDown={handlePointerDown}
     >
       <img className="h-full" src={getImageSource(type)}></img>

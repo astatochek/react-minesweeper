@@ -92,12 +92,30 @@ export default function FieldComponent() {
     };
   }
 
-  function updateField(fieldData: CellDataType[], index: number) {
-    if (fieldData[index].hasMine) {
-      fieldData[index] = openedMine(fieldData[index]);
-    } else {
-      openNearCells(fieldData, index);
+  function updateField(fieldData: CellDataType[], index: number, type: "left" | "right") {
+
+    const cell = fieldData[index];
+
+    if (type === "left") {
+      if (cell.hasMine) {
+        fieldData[index] = openedMine(cell);
+      } else {
+        openNearCells(fieldData, index);
+      }
+    } else if (type === "right") {
+      let nextCell = {...cell};
+      if (cell.type === "closed flag") {
+        nextCell.type = "closed";
+        fieldData[index] = nextCell;
+      } else if (cell.type === "closed") {
+        nextCell.type = "closed flag";
+        fieldData[index] = nextCell;
+      }
+      
+      
+      // OTHER FLAG ACTIONS
     }
+    
     
   }
 
@@ -157,12 +175,12 @@ export default function FieldComponent() {
     ];
   }
 
-  function handleLeftClick(index: number) {
+  function handleClick(index: number, type: "left" | "right") {
     setClickInfo((prevClickInfo) => {
       const thisClickInfo: ClickInfoType = {
         id: prevClickInfo.id + 1,
         index: index,
-        type: "left",
+        type: type,
       };
       return thisClickInfo;
     });
@@ -171,13 +189,11 @@ export default function FieldComponent() {
   useEffect(() => {
     console.log("Received Click:", clickInfo);
     if (!isValidIndex(clickInfo.index) || !field[clickInfo.index].closed) return;
-    if (clickInfo.type === "left") {
-      setField((prevField) => {
-        const nextField = [...prevField];
-        updateField(nextField, clickInfo.index);
-        return nextField;
-      });
-    }
+    setField((prevField) => {
+      const nextField = [...prevField];
+      updateField(nextField, clickInfo.index, clickInfo.type);
+      return nextField;
+    });
   }, [clickInfo]);
 
   return useMemo(() => {
@@ -187,7 +203,7 @@ export default function FieldComponent() {
           <CellComponent
             cell={cell}
             index={i}
-            handleLeftClick={handleLeftClick}
+            handleClick={handleClick}
             key={i}
           />
         ))}
