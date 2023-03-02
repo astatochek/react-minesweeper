@@ -6,7 +6,11 @@ import EmojiComponent from "./Emoji/Emoji";
 
 import { GameType } from "../../../Types/Game";
 
-export default function PanelComponent() {
+type Props = {
+  initialFlags: number;
+};
+
+export default function PanelComponent({ initialFlags }: Props) {
   const { gameMode, setGameMode } = useContext(GameContext);
 
   const [displayedTime, setDisplayedTime] = useState(0);
@@ -20,10 +24,34 @@ export default function PanelComponent() {
     return () => clearInterval(interval);
   }, [gameMode.mode]);
 
+  function handleEmojiCLick() {
+    setGameMode(() => {
+      return {
+        mode: "default",
+        emoji: "unpressed",
+        flags: initialFlags,
+      };
+    });
+    setDisplayedTime(() => 0);
+  }
+
+  function handleEmojiPointerDown(e: React.PointerEvent) {
+    setGameMode((prev) => {
+      return {
+        ...prev,
+        emoji: "pressed",
+      };
+    });
+  }
+
   return (
     <div className="h-ms-panel w-ms-field-size-16x16 bg-ms-gray p-1 flex flex-row justify-between items-center">
       <CounterComponent numberToDisplay={gameMode.flags} />
-      <EmojiComponent emoji={gameMode.emoji} />
+      <EmojiComponent
+        emoji={gameMode.emoji}
+        handleClick={handleEmojiCLick}
+        handleDown={handleEmojiPointerDown}
+      />
       <CounterComponent numberToDisplay={displayedTime} />
     </div>
   );

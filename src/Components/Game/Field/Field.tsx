@@ -7,9 +7,31 @@ import { ClickInfoType } from "../../../Types/ClickContext";
 import { GameType } from "../../../Types/Game";
 import GameContext from "../../../Context/Game";
 
-export default function FieldComponent() {
-  const size = 16;
-  const numOfMines = 40;
+type Props = {
+  size: number,
+  numOfMines: number,
+}
+
+export default function FieldComponent({ size, numOfMines }: Props) {
+
+  const availableCellTypes: CellType[] = [
+    "closed",
+    "closed flag",
+    "flag",
+    "mine",
+    "mine red",
+    "mine wrong",
+    "pressed",
+    "type 0",
+    "type 1",
+    "type 2",
+    "type 3",
+    "type 4",
+    "type 5",
+    "type 6",
+    "type 7",
+    "type 8",
+  ];
 
   const { clickInfo, setClickInfo } = useContext(ClickContext);
 
@@ -102,14 +124,14 @@ export default function FieldComponent() {
           hasMine: true,
           minesNear: 0,
           closed: false,
-        }
+        };
       } else if (cell.type === "closed flag") {
         fieldData[i] = {
           type: "mine wrong",
           hasMine: false,
           minesNear: 0,
           closed: false,
-        }
+        };
       }
     });
 
@@ -150,9 +172,11 @@ export default function FieldComponent() {
   function initializeField(firstClickIndex: number): CellDataType[] {
     const mineIndices = getMineIndices(numOfMines, firstClickIndex);
 
-    let initialField: CellDataType[] = new Array(size * size).fill(null).map(() => {
-      return { type: "closed", hasMine: false, minesNear: 0, closed: true };
-    });
+    let initialField: CellDataType[] = new Array(size * size)
+      .fill(null)
+      .map(() => {
+        return { type: "closed", hasMine: false, minesNear: 0, closed: true };
+      });
 
     mineIndices.forEach((index) => {
       // field[index].type = "mine";
@@ -172,25 +196,6 @@ export default function FieldComponent() {
     return initialField;
   }
 
-  const availableCellTypes: CellType[] = [
-    "closed",
-    "closed flag",
-    "flag",
-    "mine",
-    "mine red",
-    "mine wrong",
-    "pressed",
-    "type 0",
-    "type 1",
-    "type 2",
-    "type 3",
-    "type 4",
-    "type 5",
-    "type 6",
-    "type 7",
-    "type 8",
-  ];
-
   function handleClick(index: number, type: "left" | "right") {
     setClickInfo((prevClickInfo) => {
       const thisClickInfo: ClickInfoType = {
@@ -206,7 +211,9 @@ export default function FieldComponent() {
     initializeField(click.index).forEach((cell, i) => {
       fieldData[i] = { ...cell };
     });
-    setGameMode(() => { return { mode: "on", emoji: "unpressed", flags: numOfMines } });
+    setGameMode(() => {
+      return { mode: "on", emoji: "unpressed", flags: numOfMines };
+    });
   }
 
   function getEndGame(): GameType {
@@ -230,7 +237,9 @@ export default function FieldComponent() {
 
     setFlags(
       [...Array(size * size).keys()].filter(
-        (i) => nextField[i].type === "closed flag" || nextField[i].type === "flag"
+        (i) =>
+          nextField[i].type === "closed flag" ||
+          nextField[i].type === "mine wrong"
       )
     );
 
@@ -238,15 +247,42 @@ export default function FieldComponent() {
   }, [clickInfo]);
 
   useEffect(() => {
-    setGameMode((prev) => {
-      return {
-        ...prev,
-        flags: numOfMines - flags.length,
-      };
-    });
+    if (gameMode.mode !== "on") return;
+    if (
+      field.every(
+        (cell) =>
+          (cell.hasMine && cell.closed) || (!cell.hasMine && !cell.closed)
+      )
+    ) {
+      setGameMode(() => {
+        return {
+          mode: "over",
+          emoji: "win",
+          flags: numOfMines - flags.length,
+        };
+      });
+    } else {
+      setGameMode((prev) => {
+        return {
+          ...prev,
+          emoji: prev.emoji === "active" ? "unpressed" : prev.emoji,
+          flags: numOfMines - flags.length,
+        };
+      });
+    }
   }, [field]);
 
   useMemo(() => console.log("Game State:", gameMode), [gameMode]);
+
+  useMemo(() => {
+    if (gameMode.mode === "default") {
+      setField(() =>
+        new Array(size * size).fill(null).map(() => {
+          return { type: "closed", hasMine: false, minesNear: 0, closed: true };
+        })
+      );
+    }
+  }, [gameMode.mode]);
 
   return useMemo(() => {
     return (
@@ -256,7 +292,6 @@ export default function FieldComponent() {
             cell={cell}
             index={i}
             handleClick={handleClick}
-            clickable={gameMode.mode !== "over"}
             key={i}
           />
         ))}

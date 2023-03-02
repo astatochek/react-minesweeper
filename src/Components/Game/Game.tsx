@@ -17,7 +17,9 @@ import { GameType } from "../../Types/Game";
 import GameContext from "../../Context/Game";
 
 export default function GameComponent() {
-  const flags = 40;
+
+  const size = 16;
+  const numOfMines = 40;
 
   const [clickInfo, setClickInfo] = useState<ClickInfoType>({
     id: 0,
@@ -26,8 +28,8 @@ export default function GameComponent() {
   });
   const [gameMode, setGameMode] = useState<GameType>({
     mode: "default",
-    emoji: "active",
-    flags: flags,
+    emoji: "unpressed",
+    flags: numOfMines,
   });
 
   return (
@@ -60,7 +62,7 @@ export default function GameComponent() {
                   backgroundSize: "100% 100%",
                 }}
               />
-              <PanelComponent />
+              <PanelComponent initialFlags={numOfMines}/>
               <div
                 className="w-ms-24 h-panel"
                 style={{
@@ -94,7 +96,7 @@ export default function GameComponent() {
                   backgroundSize: "100% 100%",
                 }}
               />
-              <FieldComponent /> 
+              <FieldComponent size={size} numOfMines={numOfMines}/> 
               <div
                 className="w-ms-24 h-ms-field-size-16x16"
                 style={{

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import closed from "../../../../assets/closed.svg";
 import closedFlag from "../../../../assets/closed_flag.svg";
@@ -16,6 +16,7 @@ import type5 from "../../../../assets/type5.svg";
 import type6 from "../../../../assets/type6.svg";
 import type7 from "../../../../assets/type7.svg";
 import type8 from "../../../../assets/type8.svg";
+import GameContext from "../../../../Context/Game";
 
 import { CellType } from "../../../../Types/Cell";
 import { CellDataType } from "../../../../Types/CellData";
@@ -24,15 +25,20 @@ type Props = {
   cell: CellDataType;
   index: number;
   handleClick: (index: number, type: "left" | "right") => void;
-  clickable: boolean;
 };
 
-export default function CellComponent({ cell, index, handleClick, clickable }: Props) {
+export default function CellComponent({ cell, index, handleClick }: Props) {
   const [type, setType] = useState<CellType>("closed");
 
   useEffect(() => {
     setType(() => cell.type);
   }, [cell]);
+
+  const { gameMode, setGameMode } = useContext(GameContext);
+
+  const [clickable, setClickable] = useState(gameMode.mode !== "over");
+
+  useMemo(() => setClickable(gameMode.mode !== "over"), [gameMode.mode]);
 
   function getImageSource(thisType: CellType): string {
     switch (thisType) {
@@ -78,9 +84,15 @@ export default function CellComponent({ cell, index, handleClick, clickable }: P
     switch (event.button) {
       case 0:
         setType(() => "pressed");
+        setGameMode((prev) => {
+          return {
+            ...prev,
+            emoji: "active",
+          }
+        })
         break;
       case 2:
-        handleClick(index, "right")
+        handleClick(index, "right");
         break;
     }
   }
@@ -91,13 +103,16 @@ export default function CellComponent({ cell, index, handleClick, clickable }: P
     }
   }
 
-  return (
-    <div
-      className="h-ms-cell"
-      onClick={clickable ? handleClickEvent : () => {}}
-      onPointerDown={clickable ? handlePointerDown: () => {}}
-    >
-      <img className="h-full" src={getImageSource(type)}></img>
-    </div>
+  return useMemo(
+    () => (
+      <div
+        className="h-ms-cell"
+        onClick={clickable ? handleClickEvent : () => {}}
+        onPointerDown={clickable ? handlePointerDown : () => {}}
+      >
+        <img className="h-full" src={getImageSource(type)}></img>
+      </div>
+    ),
+    [cell, index, handleClick, type, clickable]
   );
 }

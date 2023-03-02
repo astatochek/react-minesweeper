@@ -10,9 +10,11 @@ import { EmojiType } from "../../../../Types/Emoji";
 
 type Props = {
   emoji: EmojiType;
+  handleClick: () => void;
+  handleDown: (e: React.PointerEvent) => void;
 };
 
-export default function EmojiComponent({ emoji }: Props) {
+export default function EmojiComponent({ emoji, handleClick, handleDown }: Props) {
   let currentEmoji = "";
 
   switch (emoji) {
@@ -34,7 +36,7 @@ export default function EmojiComponent({ emoji }: Props) {
   }
 
   return (
-    <div className="h-ms-counter">
+    <div className="h-ms-counter" onClick={handleClick} onPointerDown={handleDown}>
       <img src={currentEmoji} className="h-full"></img>
     </div>
   );
