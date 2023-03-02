@@ -103,12 +103,25 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
     }
   }
 
+  // function handlePointerEnter(event: React.PointerEvent) {
+  //   if (event.pressure !== 0)
+  //     setType(() => "pressed");
+  // }
+
+  function handlePointerOut() {
+    if (cell.closed && type === "pressed") {
+      setType(() => cell.type);
+    }
+  }
+
   return useMemo(
     () => (
       <div
         className="h-ms-cell"
         onClick={clickable ? handleClickEvent : () => {}}
         onPointerDown={clickable ? handlePointerDown : () => {}}
+        // onPointerEnter={handlePointerEnter}
+        onPointerOut={handlePointerOut}
       >
         <img className="h-full" src={getImageSource(type)}></img>
       </div>

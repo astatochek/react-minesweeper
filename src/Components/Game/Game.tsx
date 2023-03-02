@@ -36,7 +36,7 @@ export default function GameComponent() {
     <>
       <ClickContext.Provider value={{ clickInfo, setClickInfo }}>
         <GameContext.Provider value={{ gameMode, setGameMode }}>
-          <div className="flex flex-col justify-start items-center">
+          <div className="flex flex-col justify-start items-center select-none">
             {/* TOP BORDER */}
             <div className="flex flex-row justify-start h-ms-22">
               <div className="w-ms-24 h-full">

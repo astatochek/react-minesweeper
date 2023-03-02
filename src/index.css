@@ -9,7 +9,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87); */
-/* 
+  /* 
   --main-theme-color: rgb(192,192,192);
   background-color: var(--main-theme-color);
 
@@ -21,5 +21,14 @@
 }
 
 body {
-  @apply bg-ms-gray
+  @apply bg-ms-gray;
+}
+
+@layer components {
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+  }
 }
