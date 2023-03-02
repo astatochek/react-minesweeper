@@ -24,9 +24,10 @@ type Props = {
   cell: CellDataType;
   index: number;
   handleClick: (index: number, type: "left" | "right") => void;
+  clickable: boolean;
 };
 
-export default function CellComponent({ cell, index, handleClick }: Props) {
+export default function CellComponent({ cell, index, handleClick, clickable }: Props) {
   const [type, setType] = useState<CellType>("closed");
 
   useEffect(() => {
@@ -93,8 +94,8 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
   return (
     <div
       className="h-ms-cell"
-      onClick={handleClickEvent}
-      onPointerDown={handlePointerDown}
+      onClick={clickable ? handleClickEvent : () => {}}
+      onPointerDown={clickable ? handlePointerDown: () => {}}
     >
       <img className="h-full" src={getImageSource(type)}></img>
     </div>

@@ -15,9 +15,13 @@ export default function FieldComponent() {
 
   const { gameMode, setGameMode } = useContext(GameContext);
 
-  const delayedGameMode = useRef<GameType>(gameMode);
+  const [flags, setFlags] = useState<number[]>([]);
 
-  const flagPositions = useRef<{ flags: number[] }>({ flags: [] });
+  const [field, setField] = useState<CellDataType[]>(
+    new Array(size * size).fill(null).map(() => {
+      return { type: "closed", hasMine: false, minesNear: 0, closed: true };
+    })
+  );
 
   function isValidIndex(index: number) {
     return index >= 0 && index < size * size;
@@ -90,32 +94,24 @@ export default function FieldComponent() {
     }
   }
 
+  // function updateFlags(fieldData: CellDataType[], newFlagIndex: number = -1) {
+  //   if (newFlagIndex === -1) return;
 
-  function updateFlags(fieldData: CellDataType[], newFlagIndex: number = -1) {
-    if (
-      newFlagIndex !== -1 &&
-      !flagPositions.current.flags.includes(newFlagIndex)
-    ) {
-      flagPositions.current.flags.push(newFlagIndex);
-    }
-    const flags = [...flagPositions.current.flags];
-    let toRemove: number[] = [];
-    flags.forEach((index) => {
-      if (fieldData[index].type !== "closed flag") {
-        toRemove.push(index);
-      }
-    });
-    flagPositions.current.flags = flags.filter(
-      (index) => !toRemove.includes(index)
-    );
-    delayedGameMode.current = {
-      mode: "on",
-      emoji: "unpressed",
-      flags: numOfMines - flagPositions.current.flags.length,
-    };
-
-    // console.log("Flags:", flagPositions.current.flags);
-  }
+  //   if (newFlagIndex !== -1 && !flags.includes(newFlagIndex)) {
+  //     flags.push(newFlagIndex);
+  //   }
+  //   let toRemove: number[] = [];
+  //   flags.forEach((index) => {
+  //     if (fieldData[index].type !== "closed flag") {
+  //       toRemove.push(index);
+  //     }
+  //   });
+  //   setGameMode({
+  //     mode: "on",
+  //     emoji: "unpressed",
+  //     flags: numOfMines - flags.length,
+  //   });
+  // }
 
   function openAllMines(fieldData: CellDataType[], clickedMineIndex: number) {
     const mines = fieldData
@@ -152,8 +148,7 @@ export default function FieldComponent() {
     if (type === "left") {
       if (cell.hasMine) {
         openAllMines(fieldData, index);
-        delayedGameMode.current = getEndGame();
-        console.log("End Game Ref:", delayedGameMode.current);
+        setGameMode(getEndGame());
       } else {
         openNearCells(fieldData, index);
       }
@@ -162,16 +157,13 @@ export default function FieldComponent() {
       if (cell.type === "closed flag") {
         nextCell.type = "closed";
         fieldData[index] = nextCell;
-        updateFlags(fieldData);
-      } else if (
-        cell.type === "closed" &&
-        flagPositions.current.flags.length < gameMode.flags
-      ) {
+        // updateFlags(fieldData);
+      } else if (cell.type === "closed" && flags.length < gameMode.flags) {
         nextCell.type = "closed flag";
         fieldData[index] = nextCell;
-        if (!flagPositions.current.flags.includes(index)) {
-          updateFlags(fieldData, index);
-        }
+        // if (!flags.includes(index)) {
+        //   updateFlags(fieldData, index);
+        // }
       }
       // OTHER FLAG ACTIONS
     }
@@ -201,12 +193,6 @@ export default function FieldComponent() {
 
     return field;
   }
-
-  const [field, setField] = useState<CellDataType[]>(
-    new Array(size * size).fill(null).map(() => {
-      return { type: "closed", hasMine: false, minesNear: 0, closed: true };
-    })
-  );
 
   const availableCellTypes: CellType[] = [
     "closed",
@@ -238,9 +224,11 @@ export default function FieldComponent() {
     });
   }
 
-  function startGame(click: ClickInfoType) {
-    setField(() => initializeField(click.index));
-    delayedGameMode.current = { mode: "on", emoji: "unpressed", flags: numOfMines };
+  function startGame(fieldData: CellDataType[], click: ClickInfoType) {
+    initializeField(click.index).forEach((cell, i) => {
+      fieldData[i] = { ...cell };
+    });
+    setGameMode(() => { return { mode: "on", emoji: "unpressed", flags: numOfMines } });
   }
 
   function getEndGame(): GameType {
@@ -255,23 +243,33 @@ export default function FieldComponent() {
       gameMode.mode === "over"
     )
       return;
-    delayedGameMode.current = gameMode;
-    if (clickInfo.id === 1 && clickInfo.type === "left") {
-      startGame(clickInfo);
+    let nextField: CellDataType[] = [...field];
+    if (gameMode.mode === "default" && clickInfo.type === "left") {
+      startGame(nextField, clickInfo);
     } else {
-      setField((prevField) => {
-        const nextField = [...prevField];
-        updateField(nextField, clickInfo.index, clickInfo.type);
-        return nextField;
-      });
+      updateField(nextField, clickInfo.index, clickInfo.type);
     }
 
-    return () => {
-      console.log("Final Ref:", delayedGameMode.current);
-      setGameMode(delayedGameMode.current);
-    }
-    
+    setFlags(
+      [...Array(size * size).keys()].filter(
+        (i) => nextField[i].type === "closed flag"
+      )
+    );
+
+    setField(() => nextField);
   }, [clickInfo]);
+
+  useEffect(() => {
+    setGameMode((prev) => {
+      return {
+        mode: prev.mode,
+        emoji: prev.emoji,
+        flags: numOfMines - flags.length,
+      };
+    });
+  }, [field]);
+
+  useMemo(() => console.log("Game State:", gameMode), [gameMode]);
 
   return useMemo(() => {
     return (
@@ -281,6 +279,7 @@ export default function FieldComponent() {
             cell={cell}
             index={i}
             handleClick={handleClick}
+            clickable={gameMode.mode !== "over"}
             key={i}
           />
         ))}

@@ -14,7 +14,6 @@ export default function PanelComponent() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameMode.mode === "on" && displayedTime < 999) {
-        console.log(gameMode);
         setDisplayedTime((prev) => prev + 1);
       }
     }, 1000);
