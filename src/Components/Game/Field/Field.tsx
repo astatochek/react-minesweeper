@@ -94,42 +94,25 @@ export default function FieldComponent() {
     }
   }
 
-  // function updateFlags(fieldData: CellDataType[], newFlagIndex: number = -1) {
-  //   if (newFlagIndex === -1) return;
-
-  //   if (newFlagIndex !== -1 && !flags.includes(newFlagIndex)) {
-  //     flags.push(newFlagIndex);
-  //   }
-  //   let toRemove: number[] = [];
-  //   flags.forEach((index) => {
-  //     if (fieldData[index].type !== "closed flag") {
-  //       toRemove.push(index);
-  //     }
-  //   });
-  //   setGameMode({
-  //     mode: "on",
-  //     emoji: "unpressed",
-  //     flags: numOfMines - flags.length,
-  //   });
-  // }
-
   function openAllMines(fieldData: CellDataType[], clickedMineIndex: number) {
-    const mines = fieldData
-      .map((cell, i) => i)
-      .filter((index) => fieldData[index].hasMine);
-
-    mines.forEach((mineIndex) => {
-      if (!fieldData[mineIndex].hasMine) {
-        console.error(`Cell[${mineIndex}] has no mine`);
-      } else {
-        fieldData[mineIndex] = {
+    [...fieldData].forEach((cell, i) => {
+      if (cell.hasMine) {
+        fieldData[i] = {
           type: "mine",
           hasMine: true,
           minesNear: 0,
           closed: false,
-        };
+        }
+      } else if (cell.type === "closed flag") {
+        fieldData[i] = {
+          type: "mine wrong",
+          hasMine: false,
+          minesNear: 0,
+          closed: false,
+        }
       }
     });
+
     fieldData[clickedMineIndex] = {
       type: "mine red",
       hasMine: true,
@@ -157,41 +140,36 @@ export default function FieldComponent() {
       if (cell.type === "closed flag") {
         nextCell.type = "closed";
         fieldData[index] = nextCell;
-        // updateFlags(fieldData);
-      } else if (cell.type === "closed" && flags.length < gameMode.flags) {
+      } else if (cell.type === "closed" && flags.length < numOfMines) {
         nextCell.type = "closed flag";
         fieldData[index] = nextCell;
-        // if (!flags.includes(index)) {
-        //   updateFlags(fieldData, index);
-        // }
       }
-      // OTHER FLAG ACTIONS
     }
   }
 
   function initializeField(firstClickIndex: number): CellDataType[] {
     const mineIndices = getMineIndices(numOfMines, firstClickIndex);
 
-    let field: CellDataType[] = new Array(size * size).fill(null).map(() => {
+    let initialField: CellDataType[] = new Array(size * size).fill(null).map(() => {
       return { type: "closed", hasMine: false, minesNear: 0, closed: true };
     });
 
     mineIndices.forEach((index) => {
       // field[index].type = "mine";
-      field[index].hasMine = true;
+      initialField[index].hasMine = true;
 
       const availableShifts = getShift(index);
 
       availableShifts.forEach((shift) => {
-        if (!field[index + shift].hasMine) {
-          field[index + shift].minesNear++;
+        if (!initialField[index + shift].hasMine) {
+          initialField[index + shift].minesNear++;
         }
       });
     });
 
-    field[firstClickIndex] = openedCellIfAllowed(field[firstClickIndex]);
+    openNearCells(initialField, firstClickIndex);
 
-    return field;
+    return initialField;
   }
 
   const availableCellTypes: CellType[] = [
@@ -246,13 +224,13 @@ export default function FieldComponent() {
     let nextField: CellDataType[] = [...field];
     if (gameMode.mode === "default" && clickInfo.type === "left") {
       startGame(nextField, clickInfo);
-    } else {
+    } else if (gameMode.mode === "on") {
       updateField(nextField, clickInfo.index, clickInfo.type);
     }
 
     setFlags(
       [...Array(size * size).keys()].filter(
-        (i) => nextField[i].type === "closed flag"
+        (i) => nextField[i].type === "closed flag" || nextField[i].type === "flag"
       )
     );
 
@@ -262,8 +240,7 @@ export default function FieldComponent() {
   useEffect(() => {
     setGameMode((prev) => {
       return {
-        mode: prev.mode,
-        emoji: prev.emoji,
+        ...prev,
         flags: numOfMines - flags.length,
       };
     });
