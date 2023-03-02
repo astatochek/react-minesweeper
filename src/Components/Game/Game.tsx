@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 
 import PanelComponent from "./Panel/Panel";
 
@@ -13,100 +13,115 @@ import cornerBottomRight from "./../../assets/corner_bottom-right-2x.png";
 import FieldComponent from "./Field/Field";
 import { ClickInfoType } from "../../Types/ClickContext";
 import ClickContext, { ClickContextType } from "../../Context/Click";
+import { GameType } from "../../Types/Game";
+import GameContext from "../../Context/Game";
 
 export default function GameComponent() {
-  const [clickInfo, setClickInfo] = useState<ClickInfoType>({ id: 0, index: -1, type: "left" });
+  const flags = 40;
+
+  const [clickInfo, setClickInfo] = useState<ClickInfoType>({
+    id: 0,
+    index: -1,
+    type: "left",
+  });
+  const [gameMode, setGameMode] = useState<GameType>({
+    mode: "default",
+    emoji: "active",
+    flags: flags,
+  });
 
   return (
     <>
-      <div className="flex flex-col justify-start items-center">
-        {/* TOP BORDER */}
-        <div className="flex flex-row justify-start h-ms-22">
-          <div className="w-ms-24 h-full">
-            <img src={cornerUpLeft}></img>
+      <ClickContext.Provider value={{ clickInfo, setClickInfo }}>
+        <GameContext.Provider value={{ gameMode, setGameMode }}>
+          <div className="flex flex-col justify-start items-center">
+            {/* TOP BORDER */}
+            <div className="flex flex-row justify-start h-ms-22">
+              <div className="w-ms-24 h-full">
+                <img src={cornerUpLeft}></img>
+              </div>
+              <div
+                className="h-full w-ms-field-size-16x16"
+                style={{
+                  backgroundImage: `url(${borderHorizontal})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+              <div className="w-ms-24 h-full">
+                <img src={cornerUpRight}></img>
+              </div>
+            </div>
+            {/* INFO PANEL */}
+            <div className="flex flex-row justify-start">
+              <div
+                className="w-ms-24 h-ms-panel"
+                style={{
+                  backgroundImage: `url(${borderVertical})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+              <PanelComponent />
+              <div
+                className="w-ms-24 h-panel"
+                style={{
+                  backgroundImage: `url(${borderVertical})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+            </div>
+            {/* MID BORDER */}
+            <div className="flex flex-row h-ms-22 justify-start">
+              <div className="w-ms-24 h-full">
+                <img src={cornerMidLeft}></img>
+              </div>
+              <div
+                className="h-full w-ms-field-size-16x16"
+                style={{
+                  backgroundImage: `url(${borderHorizontal})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+              <div className="w-ms-24 h-full">
+                <img src={cornerMidRight}></img>
+              </div>
+            </div>
+            {/* FIELD */}
+            <div className="h-ms-field-size-16x16 flex flex-row justify-start">
+              <div
+                className="w-ms-24 h-ms-field-size-16x16"
+                style={{
+                  backgroundImage: `url(${borderVertical})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+              <FieldComponent /> 
+              <div
+                className="w-ms-24 h-ms-field-size-16x16"
+                style={{
+                  backgroundImage: `url(${borderVertical})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+            </div>
+            {/* BOTTOM BORDER */}
+            <div className="flex flex-row justify-start h-ms-22">
+              <div className="w-ms-24 h-full">
+                <img src={cornerBottomLeft}></img>
+              </div>
+              <div
+                className="h-full w-ms-field-size-16x16"
+                style={{
+                  backgroundImage: `url(${borderHorizontal})`,
+                  backgroundSize: "100% 100%",
+                }}
+              />
+              <div className="w-ms-24 h-full">
+                <img src={cornerBottomRight}></img>
+              </div>
+            </div>
           </div>
-          <div
-            className="h-full w-ms-field-size-16x16"
-            style={{
-              backgroundImage: `url(${borderHorizontal})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-          <div className="w-ms-24 h-full">
-            <img src={cornerUpRight}></img>
-          </div>
-        </div>
-        {/* INFO PANEL */}
-        <div className="flex flex-row justify-start">
-          <div
-            className="w-ms-24 h-ms-panel"
-            style={{
-              backgroundImage: `url(${borderVertical})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-          <PanelComponent />
-          <div
-            className="w-ms-24 h-panel"
-            style={{
-              backgroundImage: `url(${borderVertical})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-        </div>
-        {/* MID BORDER */}
-        <div className="flex flex-row h-ms-22 justify-start">
-          <div className="w-ms-24 h-full">
-            <img src={cornerMidLeft}></img>
-          </div>
-          <div
-            className="h-full w-ms-field-size-16x16"
-            style={{
-              backgroundImage: `url(${borderHorizontal})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-          <div className="w-ms-24 h-full">
-            <img src={cornerMidRight}></img>
-          </div>
-        </div>
-        {/* FIELD */}
-        <div className="h-ms-field-size-16x16 flex flex-row justify-start">
-          <div
-            className="w-ms-24 h-ms-field-size-16x16"
-            style={{
-              backgroundImage: `url(${borderVertical})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-          <ClickContext.Provider value={{ clickInfo, setClickInfo }}>
-            <FieldComponent />
-          </ClickContext.Provider>
-          <div
-            className="w-ms-24 h-ms-field-size-16x16"
-            style={{
-              backgroundImage: `url(${borderVertical})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-        </div>
-        {/* BOTTOM BORDER */}
-        <div className="flex flex-row justify-start h-ms-22">
-          <div className="w-ms-24 h-full">
-            <img src={cornerBottomLeft}></img>
-          </div>
-          <div
-            className="h-full w-ms-field-size-16x16"
-            style={{
-              backgroundImage: `url(${borderHorizontal})`,
-              backgroundSize: "100% 100%",
-            }}
-          />
-          <div className="w-ms-24 h-full">
-            <img src={cornerBottomRight}></img>
-          </div>
-        </div>
-      </div>
+        </GameContext.Provider>
+      </ClickContext.Provider>
     </>
   );
 }

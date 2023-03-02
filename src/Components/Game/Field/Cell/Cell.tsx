@@ -75,7 +75,7 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
   function handlePointerDown(event: React.PointerEvent) {
     if (!cell.closed) return;
     switch (event.button) {
-      case 1:
+      case 0:
         setType(() => "pressed");
         break;
       case 2:
