@@ -8,12 +8,11 @@ import { GameType } from "../../../Types/Game";
 import GameContext from "../../../Context/Game";
 
 type Props = {
-  size: number,
-  numOfMines: number,
-}
+  size: number;
+  numOfMines: number;
+};
 
 export default function FieldComponent({ size, numOfMines }: Props) {
-
   const availableCellTypes: CellType[] = [
     "closed",
     "closed flag",
@@ -144,8 +143,8 @@ export default function FieldComponent({ size, numOfMines }: Props) {
   }
 
   function openShiftedCells(fieldData: CellDataType[], cellIndex: number) {
-
-    if (fieldData[cellIndex].type === "closed flag") {}
+    if (fieldData[cellIndex].type === "closed flag") {
+    }
 
     const shifts = getShift(cellIndex);
 
@@ -155,7 +154,7 @@ export default function FieldComponent({ size, numOfMines }: Props) {
       if (fieldData[cellIndex + shift].type === "closed flag") {
         flagsNear++;
       }
-    })
+    });
 
     if (flagsNear < fieldData[cellIndex].minesNear) {
       return;
@@ -164,24 +163,25 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     let mineIndex = -1;
     shifts.forEach((shift) => {
       const cell = fieldData[cellIndex + shift];
-      if (cell.type === "closed flag") {
-        
-      } else if (cell.hasMine) {
-        mineIndex = cellIndex + shift;
-      } else {
-        fieldData[cellIndex + shift] = {
-          ...cell,
-          closed: false,
-          type: `type ${cell.minesNear}`,
+      if (cell.type !== "closed flag") {
+        if (cell.hasMine) {
+          mineIndex = cellIndex + shift;
+        } else if (cell.minesNear === 0) {
+          openNearCells(fieldData, cellIndex + shift);
+        }  else {
+          fieldData[cellIndex + shift] = {
+            ...cell,
+            closed: false,
+            type: `type ${cell.minesNear}`,
+          };
         }
       }
-    })
+    });
 
     if (mineIndex !== -1) {
       openAllMines(fieldData, mineIndex);
-      setGameMode(getEndGame());
+      setGameMode(getEndGame(fieldData));
     }
-
   }
 
   function updateField(
@@ -194,7 +194,7 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     if (type === "left") {
       if (cell.hasMine) {
         openAllMines(fieldData, index);
-        setGameMode(getEndGame());
+        setGameMode(getEndGame(fieldData));
       } else if (!cell.closed) {
         openShiftedCells(fieldData, index);
       } else {
@@ -239,6 +239,14 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     return initialField;
   }
 
+  function calcFlags(nextField: CellDataType[]) {
+    return [...Array(size * size).keys()].filter(
+      (i) =>
+        nextField[i].type === "closed flag" ||
+        nextField[i].type === "mine wrong"
+    )
+  }
+
   function handleClick(index: number, type: "left" | "right") {
     setClickInfo((prevClickInfo) => {
       const thisClickInfo: ClickInfoType = {
@@ -259,17 +267,13 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     });
   }
 
-  function getEndGame(): GameType {
-    return { mode: "over", emoji: "lose", flags: numOfMines };
+  function getEndGame(fieldData: CellDataType[]): GameType {
+    return { mode: "over", emoji: "lose", flags: numOfMines - calcFlags(fieldData).length };
   }
 
   useEffect(() => {
     console.log("Received Click:", clickInfo);
-    if (
-      !isValidIndex(clickInfo.index) ||
-      gameMode.mode === "over"
-    )
-      return;
+    if (!isValidIndex(clickInfo.index) || gameMode.mode === "over") return;
     let nextField: CellDataType[] = [...field];
     if (gameMode.mode === "default" && clickInfo.type === "left") {
       startGame(nextField, clickInfo);
@@ -277,13 +281,7 @@ export default function FieldComponent({ size, numOfMines }: Props) {
       updateField(nextField, clickInfo.index, clickInfo.type);
     }
 
-    setFlags(
-      [...Array(size * size).keys()].filter(
-        (i) =>
-          nextField[i].type === "closed flag" ||
-          nextField[i].type === "mine wrong"
-      )
-    );
+    setFlags(calcFlags(nextField));
 
     setField(() => nextField);
   }, [clickInfo]);
