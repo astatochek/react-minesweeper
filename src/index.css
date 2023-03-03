@@ -21,8 +21,12 @@
 }
 
 body {
-  @apply bg-ms-gray;
-  font-family: 'Courier New', Courier, monospace;
+  /* @apply bg-ms-gray; */
+  font-family: "Courier New", Courier, monospace;
+  background-image: url("./assets/windows_xp.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 @layer components {

@@ -7,10 +7,11 @@ import EmojiComponent from "./Emoji/Emoji";
 import { GameType } from "../../../Types/Game";
 
 type Props = {
+  width: string;
   initialFlags: number;
 };
 
-export default function PanelComponent({ initialFlags }: Props) {
+export default function PanelComponent({ width, initialFlags }: Props) {
   const { gameMode, setGameMode } = useContext(GameContext);
 
   const [displayedTime, setDisplayedTime] = useState(0);
@@ -45,7 +46,10 @@ export default function PanelComponent({ initialFlags }: Props) {
   }
 
   return (
-    <div className="h-ms-panel w-ms-field-size-16x16 bg-ms-gray p-1 flex flex-row justify-between items-center">
+    <div
+      className="h-ms-panel bg-ms-gray p-1 flex flex-row justify-between items-center"
+      style={{ width: width }}
+    >
       <CounterComponent numberToDisplay={gameMode.flags} />
       <EmojiComponent
         emoji={gameMode.emoji}

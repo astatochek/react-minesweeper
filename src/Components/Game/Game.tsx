@@ -1,36 +1,45 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import PanelComponent from "./Panel/Panel";
 
-import cornerUpLeft from "./../../assets/corner_up_left_2x.png";
-import cornerUpRight from "./../../assets/corner_up_right_2x.png";
 import borderHorizontal from "./../../assets/border_hor_2x.png";
 import borderVertical from "./../../assets/border_vert_2x.png";
 import cornerMidLeft from "./../../assets/t_left_2x.png";
 import cornerMidRight from "./../../assets/t_right_2x.png";
-import cornerBottomLeft from "./../../assets/corner_bottom-left-2x.png";
-import cornerBottomRight from "./../../assets/corner_bottom-right-2x.png";
 import FieldComponent from "./Field/Field";
 import { ClickInfoType } from "../../Types/ClickContext";
-import ClickContext, { ClickContextType } from "../../Context/Click";
+import ClickContext from "../../Context/Click";
 import { GameType } from "../../Types/Game";
 import GameContext from "../../Context/Game";
+import TopComponent from "../Card/Top/Top";
+import BotComponent from "../Card/Bot/Bot";
 
-export default function GameComponent() {
+type Props = {
+  cellSize: number;
+  size: number;
+  numOfMines: number;
+};
 
-  const size = 16;
-  const numOfMines = 40;
-
+export default function GameComponent({ cellSize, size, numOfMines }: Props) {
   const [clickInfo, setClickInfo] = useState<ClickInfoType>({
     id: 0,
     index: -1,
     type: "left",
   });
+
   const [gameMode, setGameMode] = useState<GameType>({
     mode: "default",
     emoji: "unpressed",
     flags: numOfMines,
   });
+
+  useEffect(() => {
+    setGameMode({
+      mode: "default",
+      emoji: "unpressed",
+      flags: numOfMines,
+    });
+  }, [numOfMines]);
 
   return (
     <>
@@ -38,21 +47,7 @@ export default function GameComponent() {
         <GameContext.Provider value={{ gameMode, setGameMode }}>
           <div className="flex flex-col justify-start items-center select-none">
             {/* TOP BORDER */}
-            <div className="flex flex-row justify-start h-ms-22">
-              <div className="w-ms-24 h-full">
-                <img src={cornerUpLeft}></img>
-              </div>
-              <div
-                className="h-full w-ms-field-size-16x16"
-                style={{
-                  backgroundImage: `url(${borderHorizontal})`,
-                  backgroundSize: "100% 100%",
-                }}
-              />
-              <div className="w-ms-24 h-full">
-                <img src={cornerUpRight}></img>
-              </div>
-            </div>
+            <TopComponent width={`${size * cellSize}rem`} />
             {/* INFO PANEL */}
             <div className="flex flex-row justify-start">
               <div
@@ -62,7 +57,10 @@ export default function GameComponent() {
                   backgroundSize: "100% 100%",
                 }}
               />
-              <PanelComponent initialFlags={numOfMines}/>
+              <PanelComponent
+                width={`${size * cellSize}rem`}
+                initialFlags={numOfMines}
+              />
               <div
                 className="w-ms-24 h-panel"
                 style={{
@@ -77,10 +75,11 @@ export default function GameComponent() {
                 <img src={cornerMidLeft}></img>
               </div>
               <div
-                className="h-full w-ms-field-size-16x16"
+                className="h-full"
                 style={{
                   backgroundImage: `url(${borderHorizontal})`,
                   backgroundSize: "100% 100%",
+                  width: `${cellSize * size}rem`,
                 }}
               />
               <div className="w-ms-24 h-full">
@@ -88,39 +87,31 @@ export default function GameComponent() {
               </div>
             </div>
             {/* FIELD */}
-            <div className="h-ms-field-size-16x16 flex flex-row justify-start">
+            <div className="flex flex-row justify-start">
               <div
                 className="w-ms-24 h-ms-field-size-16x16"
                 style={{
                   backgroundImage: `url(${borderVertical})`,
                   backgroundSize: "100% 100%",
+                  height: `${cellSize * size}rem`,
                 }}
               />
-              <FieldComponent size={size} numOfMines={numOfMines}/> 
+              <FieldComponent
+                sizeRem={`${size * cellSize}rem`}
+                size={size}
+                numOfMines={numOfMines}
+              />
               <div
-                className="w-ms-24 h-ms-field-size-16x16"
+                className="w-ms-24"
                 style={{
                   backgroundImage: `url(${borderVertical})`,
                   backgroundSize: "100% 100%",
+                  height: `${cellSize * size}rem`,
                 }}
               />
             </div>
             {/* BOTTOM BORDER */}
-            <div className="flex flex-row justify-start h-ms-22">
-              <div className="w-ms-24 h-full">
-                <img src={cornerBottomLeft}></img>
-              </div>
-              <div
-                className="h-full w-ms-field-size-16x16"
-                style={{
-                  backgroundImage: `url(${borderHorizontal})`,
-                  backgroundSize: "100% 100%",
-                }}
-              />
-              <div className="w-ms-24 h-full">
-                <img src={cornerBottomRight}></img>
-              </div>
-            </div>
+            <BotComponent width={`${cellSize * size}rem`} />
           </div>
         </GameContext.Provider>
       </ClickContext.Provider>

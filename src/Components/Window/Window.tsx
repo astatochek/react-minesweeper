@@ -1,25 +1,47 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import CardComponent from "../Card/Card";
 import GameComponent from "../Game/Game";
+import ClickContext from "../../Context/Click";
+import ClickerComponent from "./Clicker/Clicker";
 
 export default function WindowComponent() {
+  const cellSize = 1.25; // rem
+
+  const [fieldSize, setFieldSize] = useState(16);
+  const [numOfMines, setNumOfMines] = useState(40);
+
+  function handleFieldSizeChange(val: 1 | -1) {
+    setFieldSize((prev) => {
+      if (fieldSize + val > 10 && fieldSize + val < 40) return prev + val;
+      return prev;
+    });
+  }
+
+  function handleNumOFMinesChange(val: 1 | -1) {
+    setNumOfMines((prev) => {
+      if (prev + val > 1 && prev + val < fieldSize * fieldSize)
+        return prev + val;
+      return prev;
+    });
+  }
+
+  useMemo(() => {
+    if (numOfMines >= fieldSize * fieldSize) {
+      setNumOfMines(fieldSize * fieldSize - 1);
+    }
+  }, [fieldSize]);
+
   return (
     <div className="relative top-0 left-0 w-full flex flex-col justify-start items-center p-14">
       <div
-        className="flex flex-col sm:flex-row [&>*]:mx-4"
         onContextMenu={(e) => e.preventDefault()}
       >
-        <GameComponent />
-        <div className="flex flex-col justify-start items-center [&>*]:mb-4">
-        <CardComponent width="20rem" height="2.5rem">
-          <div className="w-full h-full text-center flex items-center justify-center">
-            <h1 className="text-3xl font-bold">React-Minesweeper</h1>
-          </div>
-        </CardComponent>
-        <CardComponent width="20rem" height="18.24rem">
-         Some Text
-        </CardComponent>
-        </div>
+        <GameComponent
+          cellSize={cellSize}
+          size={fieldSize}
+          numOfMines={numOfMines}
+        />
+        
       </div>
     </div>
   );

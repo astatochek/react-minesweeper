@@ -8,12 +8,12 @@ import { GameType } from "../../../Types/Game";
 import GameContext from "../../../Context/Game";
 
 type Props = {
+  sizeRem: string;
   size: number;
   numOfMines: number;
 };
 
-export default function FieldComponent({ size, numOfMines }: Props) {
-
+export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
   const { clickInfo, setClickInfo } = useContext(ClickContext);
 
   const { gameMode, setGameMode } = useContext(GameContext);
@@ -150,7 +150,7 @@ export default function FieldComponent({ size, numOfMines }: Props) {
           mineIndex = cellIndex + shift;
         } else if (cell.minesNear === 0) {
           openNearCells(fieldData, cellIndex + shift);
-        }  else {
+        } else {
           fieldData[cellIndex + shift] = {
             ...cell,
             closed: false,
@@ -226,7 +226,7 @@ export default function FieldComponent({ size, numOfMines }: Props) {
       (i) =>
         nextField[i].type === "closed flag" ||
         nextField[i].type === "mine wrong"
-    )
+    );
   }
 
   function handleClick(index: number, type: "left" | "right") {
@@ -250,7 +250,11 @@ export default function FieldComponent({ size, numOfMines }: Props) {
   }
 
   function getEndGame(fieldData: CellDataType[]): GameType {
-    return { mode: "over", emoji: "lose", flags: numOfMines - calcFlags(fieldData).length };
+    return {
+      mode: "over",
+      emoji: "lose",
+      flags: numOfMines - calcFlags(fieldData).length,
+    };
   }
 
   useEffect(() => {
@@ -304,11 +308,14 @@ export default function FieldComponent({ size, numOfMines }: Props) {
         })
       );
     }
-  }, [gameMode.mode]);
+  }, [gameMode.mode, size]);
 
   return useMemo(() => {
     return (
-      <div className="w-ms-field-size-16x16 h-ms-field-size-16x16 bg-ms-gray grid grid-cols-16">
+      <div
+        className="bg-ms-gray grid"
+        style={{ width: sizeRem, height: sizeRem, gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
+      >
         {field.map((cell, i) => (
           <CellComponent
             cell={cell}
@@ -319,5 +326,5 @@ export default function FieldComponent({ size, numOfMines }: Props) {
         ))}
       </div>
     );
-  }, [field]);
+  }, [field, sizeRem, size, numOfMines]);
 }
