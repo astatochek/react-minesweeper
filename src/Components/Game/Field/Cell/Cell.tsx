@@ -7,6 +7,7 @@ import mine from "../../../../assets/mine.svg";
 import mineRed from "../../../../assets/mine_red.svg";
 import mineWrong from "../../../../assets/mine_wrong.svg";
 import pressed from "../../../../assets/pressed.svg";
+import question from "../../../../assets/question.svg";
 import type0 from "../../../../assets/type0.svg";
 import type1 from "../../../../assets/type1.svg";
 import type2 from "../../../../assets/type2.svg";
@@ -56,6 +57,8 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
         return mineWrong;
       case "pressed":
         return pressed;
+      case "question":
+        return question;
       case "type 0":
         return type0;
       case "type 1":
@@ -92,7 +95,19 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
         });
         break;
       case 2:
-        handleClick(index, "right");
+        if (type === "closed flag") {
+          setType(() => "question");
+          setTimeout(() => {
+            setType((prev) => {
+              if (prev === "question") {
+                return "closed flag";
+              }
+              return prev;
+            })
+          }, 1000);
+        } else {
+          handleClick(index, "right");
+        }
         break;
     }
   }
@@ -102,11 +117,6 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
       handleClick(index, "left");
     }
   }
-
-  // function handlePointerEnter(event: React.PointerEvent) {
-  //   if (event.pressure !== 0)
-  //     setType(() => "pressed");
-  // }
 
   function handlePointerOut() {
     if (cell.closed && type === "pressed") {
@@ -120,18 +130,30 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
     }
   }
 
-  return useMemo(
-    () => (
-      <div
-        className="h-ms-cell"
-        onClick={clickable ? handleClickEvent : () => {}}
-        onPointerDown={clickable ? handlePointerDown : () => {}}
-        // onPointerEnter={handlePointerEnter}
-        onPointerOut={handlePointerOut}
-      >
-        <img className="h-full" src={getImageSource(type)}></img>
-      </div>
-    ),
-    [cell, index, handleClick, type, clickable]
+  // return useMemo(
+  //   () => (
+  //     <div
+  //       className="h-ms-cell"
+  //       onClick={clickable ? handleClickEvent : () => {}}
+  //       onPointerDown={clickable ? handlePointerDown : () => {}}
+  //       // onPointerEnter={handlePointerEnter}
+  //       onPointerOut={handlePointerOut}
+  //     >
+  //       <img className="h-full" src={getImageSource(type)}></img>
+  //     </div>
+  //   ),
+  //   [cell, index, handleClick, type, clickable]
+  // );
+
+  return (
+    <div
+      className="h-ms-cell"
+      onClick={clickable ? handleClickEvent : () => {}}
+      onPointerDown={clickable ? handlePointerDown : () => {}}
+      // onPointerEnter={handlePointerEnter}
+      onPointerOut={handlePointerOut}
+    >
+      <img className="h-full" src={getImageSource(type)}></img>
+    </div>
   );
 }

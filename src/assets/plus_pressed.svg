@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: CorelDRAW -->
+
+<svg
+   width="25mm"
+   height="25mm"
+   clip-rule="evenodd"
+   fill-rule="evenodd"
+   image-rendering="optimizeQuality"
+   shape-rendering="geometricPrecision"
+   text-rendering="geometricPrecision"
+   version="1.1"
+   viewBox="0 0 1.0655 1.0655"
+   xml:space="preserve"
+   id="svg37"
+   sodipodi:docname="plus_pressed.svg"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   id="namedview39"
+   pagecolor="#505050"
+   bordercolor="#eeeeee"
+   borderopacity="1"
+   inkscape:showpageshadow="0"
+   inkscape:pageopacity="0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#505050"
+   inkscape:document-units="mm"
+   showgrid="false"
+   inkscape:zoom="4.9953333"
+   inkscape:cx="47.644468"
+   inkscape:cy="47.444281"
+   inkscape:window-width="1920"
+   inkscape:window-height="974"
+   inkscape:window-x="-11"
+   inkscape:window-y="-11"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg37" />
+ <defs
+   id="defs23">
+  <style
+   type="text/css"
+   id="style2">
+   <![CDATA[
+    .str0 {stroke:black;stroke-width:0.00324773}
+    .fil2 {fill:black}
+    .fil4 {fill:white}
+    .fil0 {fill:gray}
+    .fil1 {fill:#c6c6c6}
+    .fil3 {fill:url(#id0)}
+   ]]>
+  </style>
+  <radialGradient
+   id="id0"
+   cx=".50477"
+   cy=".51183"
+   r=".15459"
+   gradientUnits="userSpaceOnUse">
+   <stop
+   stop-color="#fff"
+   offset="0"
+   id="stop4" />
+   <stop
+   stop-color="#E5E5E1"
+   offset=".12941"
+   id="stop6" />
+   <stop
+   stop-color="#CCC8C8"
+   offset=".2902"
+   id="stop8" />
+   <stop
+   stop-color="#B2B4B4"
+   offset=".43922"
+   id="stop10" />
+   <stop
+   stop-color="#464D43"
+   offset=".74902"
+   id="stop12" />
+   <stop
+   offset="1"
+   id="stop14" />
+  </radialGradient>
+ <style
+   type="text/css"
+   id="style17">
+   <![CDATA[
+    .fil0 {fill:gray}
+    .fil1 {fill:#c6c6c6}
+   ]]>
+  </style><style
+   type="text/css"
+   id="style19">
+   <![CDATA[
+    .fil2 {fill:blue}
+    .fil0 {fill:gray}
+    .fil1 {fill:#c6c6c6}
+   ]]>
+  </style><style
+   type="text/css"
+   id="style21">
+   <![CDATA[
+    .str0 {stroke:#a7a7a7;stroke-width:0.00340562}
+    .fil4 {fill:#afafaf}
+    .fil0 {fill:#CCCCCC}
+    .fil1 {fill:white}
+    .fil2 {fill:gray}
+    .fil3 {fill:#c6c6c6}
+    .fil5 {fill:#b7afaf}
+   ]]>
+  </style><style
+   type="text/css"
+   id="style610">
+   <![CDATA[
+    .fil0 {fill:gray}
+    .fil1 {fill:#c6c6c6}
+   ]]>
+  </style></defs>
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+<g
+   style="clip-rule:evenodd;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+   id="g629"
+   transform="scale(1.4571478)"><g
+     id="Layer_x0020_1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  <rect
+   class="fil0"
+   width="0.73122299"
+   height="0.73122299"
+   id="rect615"
+   x="0"
+   y="0" />
+  <rect
+   class="fil1"
+   x="0.044638"
+   y="0.044638"
+   width="0.686584"
+   height="0.686584"
+   id="rect617" />
+ </g></g><g
+   aria-label="+"
+   id="text484"
+   style="font-size:1.19007px;stroke-width:0.0223136"><path
+     d="M 0.82184273,0.45924325 V 0.60625874 H 0.60683984 V 0.82939687 H 0.45866218 V 0.60625874 H 0.24365929 V 0.45924325 H 0.45866218 V 0.23610512 h 0.14817766 v 0.22313813 z"
+     style="-inkscape-font-specification:'Franklin Gothic Heavy, '"
+     id="path533" /></g></svg>

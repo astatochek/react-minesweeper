@@ -6,6 +6,7 @@ export type CellType =
   | "mine red"
   | "mine wrong"
   | "pressed"
+  | "question"
   | "type 0"
   | "type 1"
   | "type 2"
