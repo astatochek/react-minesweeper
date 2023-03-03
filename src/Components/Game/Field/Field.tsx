@@ -143,6 +143,47 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     };
   }
 
+  function openShiftedCells(fieldData: CellDataType[], cellIndex: number) {
+
+    if (fieldData[cellIndex].type === "closed flag") {}
+
+    const shifts = getShift(cellIndex);
+
+    let flagsNear = 0;
+
+    shifts.forEach((shift) => {
+      if (fieldData[cellIndex + shift].type === "closed flag") {
+        flagsNear++;
+      }
+    })
+
+    if (flagsNear < fieldData[cellIndex].minesNear) {
+      return;
+    }
+
+    let mineIndex = -1;
+    shifts.forEach((shift) => {
+      const cell = fieldData[cellIndex + shift];
+      if (cell.type === "closed flag") {
+        
+      } else if (cell.hasMine) {
+        mineIndex = cellIndex + shift;
+      } else {
+        fieldData[cellIndex + shift] = {
+          ...cell,
+          closed: false,
+          type: `type ${cell.minesNear}`,
+        }
+      }
+    })
+
+    if (mineIndex !== -1) {
+      openAllMines(fieldData, mineIndex);
+      setGameMode(getEndGame());
+    }
+
+  }
+
   function updateField(
     fieldData: CellDataType[],
     index: number,
@@ -154,6 +195,8 @@ export default function FieldComponent({ size, numOfMines }: Props) {
       if (cell.hasMine) {
         openAllMines(fieldData, index);
         setGameMode(getEndGame());
+      } else if (!cell.closed) {
+        openShiftedCells(fieldData, index);
       } else {
         openNearCells(fieldData, index);
       }
@@ -224,7 +267,6 @@ export default function FieldComponent({ size, numOfMines }: Props) {
     console.log("Received Click:", clickInfo);
     if (
       !isValidIndex(clickInfo.index) ||
-      !field[clickInfo.index].closed ||
       gameMode.mode === "over"
     )
       return;

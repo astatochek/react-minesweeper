@@ -88,8 +88,8 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
           return {
             ...prev,
             emoji: "active",
-          }
-        })
+          };
+        });
         break;
       case 2:
         handleClick(index, "right");
@@ -98,7 +98,7 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
   }
 
   function handleClickEvent() {
-    if (cell.closed && cell.type !== "closed flag") {
+    if (cell.type !== "closed flag") {
       handleClick(index, "left");
     }
   }
@@ -111,6 +111,12 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
   function handlePointerOut() {
     if (cell.closed && type === "pressed") {
       setType(() => cell.type);
+      setGameMode((prev) => {
+        return {
+          ...prev,
+          emoji: "unpressed",
+        };
+      });
     }
   }
 

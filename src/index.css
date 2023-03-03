@@ -22,6 +22,7 @@
 
 body {
   @apply bg-ms-gray;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 @layer components {
