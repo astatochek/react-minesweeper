@@ -2,32 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87); */
-  /* 
-  --main-theme-color: rgb(192,192,192);
-  background-color: var(--main-theme-color);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%; */
-}
-
-body {
-  /* @apply bg-ms-gray; */
-  font-family: "Courier New", Courier, monospace;
-  background-image: url("./assets/windows_xp.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 
 @layer components {
   img {
@@ -35,5 +9,57 @@ body {
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
+  }
+
+  .window {
+    box-shadow: inset -1px -1px #00138c, inset 1px 1px #0831d9,
+      inset -2px -2px #001ea0, inset 2px 2px #166aee, inset -3px -3px #003bda,
+      inset 3px 3px #0855dd;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0 0 3px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .title-bar {
+    font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
+      "Lucida Sans", Tahoma, sans-serif;
+    background: linear-gradient(
+      180deg,
+      #0997ff,
+      #0053ee 8%,
+      #0050ee 40%,
+      #06f 88%,
+      #06f 93%,
+      #005bff 95%,
+      #003dd7 96%,
+      #003dd7
+    );
+    @apply pt-1 pr-2 pb-1 pl-1 text-sm h-6;
+    border-top: 1px solid #0831d9;
+    border-left: 1px solid #0831d9;
+    border-right: 1px solid #001ea0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 7px;
+    text-shadow: 1px 1px #0f1089;
+  }
+
+  .title-bar-text {
+    padding-left: 3px;
+  }
+
+  .title-bar-text {
+    @apply font-bold text-white tracking-normal mr-6;
+  }
+
+  .window-body {
+    background-color: rgb(236,233,216);
+  }
+
+  .windows-xp-bg {
+    background-image: url("https://i.imgur.com/s6BvTke.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }

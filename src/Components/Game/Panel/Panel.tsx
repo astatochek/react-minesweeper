@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import GameContext from "../../../Context/Game";
 
 import CounterComponent from "./Counter/Counter";
@@ -24,6 +24,8 @@ export default function PanelComponent({ width, initialFlags }: Props) {
     }, 1000);
     return () => clearInterval(interval);
   }, [gameMode.mode]);
+
+  useMemo(() => setDisplayedTime(() => 0), [width, initialFlags]);
 
   function handleEmojiCLick() {
     setGameMode(() => {

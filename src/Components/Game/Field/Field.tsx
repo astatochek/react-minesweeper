@@ -1,4 +1,11 @@
-import React, { useState, useContext, useMemo, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useContext,
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import ClickContext from "../../../Context/Click";
 import { CellType } from "../../../Types/Cell";
 import { CellDataType } from "../../../Types/CellData";
@@ -30,37 +37,48 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     return index >= 0 && index < size * size;
   }
 
-  function getShift(index: number): number[] {
+  const getShift = (index: number): number[] => {
     if (!(index >= 0 && index < size * size)) {
       console.error("Invalid Input");
       return [];
     }
 
+    const fieldSize = Number(size);
+
     const shifts = {
-      standard: [-size - 1, -size, -size + 1, -1, 1, size - 1, size, size + 1],
-      topLeft: [1, size, size + 1],
-      topRight: [-1, size - 1, size],
-      left: [-size, -size + 1, 1, size, size + 1],
-      right: [-size - 1, -size, -1, size - 1, size],
-      top: [-1, 1, size - 1, size, size + 1],
-      bottom: [-size - 1, -size, -size + 1, -1, 1],
-      bottomLeft: [-size, -size + 1, 1],
-      bottomRight: [-size - 1, -size, -1],
+      standard: [
+        -fieldSize - 1,
+        -fieldSize,
+        -fieldSize + 1,
+        -1,
+        1,
+        fieldSize - 1,
+        fieldSize,
+        fieldSize + 1,
+      ],
+      topLeft: [1, fieldSize, fieldSize + 1],
+      topRight: [-1, fieldSize - 1, fieldSize],
+      left: [-fieldSize, -fieldSize + 1, 1, fieldSize, fieldSize + 1],
+      right: [-fieldSize - 1, -fieldSize, -1, fieldSize - 1, fieldSize],
+      top: [-1, 1, fieldSize - 1, fieldSize, fieldSize + 1],
+      bottom: [-fieldSize - 1, -fieldSize, -fieldSize + 1, -1, 1],
+      bottomLeft: [-fieldSize, -fieldSize + 1, 1],
+      bottomRight: [-fieldSize - 1, -fieldSize, -1],
     };
 
     if (index === 0) return shifts.topLeft;
-    else if (index === size - 1) return shifts.topRight;
-    else if (index === size * (size - 1)) return shifts.bottomLeft;
-    else if (index === size * size - 1) return shifts.bottomRight;
-    else if (index < size) return shifts.top;
-    else if (index >= size * (size - 1)) return shifts.bottom;
-    else if (index % size === 0) return shifts.left;
-    else if (index % size === size - 1) return shifts.right;
+    else if (index === fieldSize - 1) return shifts.topRight;
+    else if (index === fieldSize * (fieldSize - 1)) return shifts.bottomLeft;
+    else if (index === fieldSize * fieldSize - 1) return shifts.bottomRight;
+    else if (index < fieldSize) return shifts.top;
+    else if (index >= fieldSize * (fieldSize - 1)) return shifts.bottom;
+    else if (index % fieldSize === 0) return shifts.left;
+    else if (index % fieldSize === fieldSize - 1) return shifts.right;
 
     return shifts.standard;
-  }
+  };
 
-  function getMineIndices(n: number, excluding: number): number[] {
+  const getMineIndices = (n: number, excluding: number): number[] => {
     if (!isValidIndex(n) || !isValidIndex(excluding)) {
       console.error("Invalid Input");
       return [];
@@ -72,7 +90,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     }
     indices = indices.sort();
     return indices;
-  }
+  };
 
   function openedCellIfAllowed(cell: CellDataType): CellDataType {
     if (cell.closed && !cell.hasMine) {
@@ -194,7 +212,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     }
   }
 
-  function initializeField(firstClickIndex: number): CellDataType[] {
+  const initializeField = (firstClickIndex: number): CellDataType[] => {
     const mineIndices = getMineIndices(numOfMines, firstClickIndex);
 
     let initialField: CellDataType[] = new Array(size * size)
@@ -210,8 +228,9 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
       const availableShifts = getShift(index);
 
       availableShifts.forEach((shift) => {
-        if (!initialField[index + shift].hasMine) {
-          initialField[index + shift].minesNear++;
+        const thisShift = Number(shift);
+        if (!initialField[index + thisShift].hasMine) {
+          initialField[index + thisShift].minesNear++;
         }
       });
     });
@@ -219,7 +238,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     openNearCells(initialField, firstClickIndex);
 
     return initialField;
-  }
+  };
 
   function calcFlags(nextField: CellDataType[]) {
     return [...Array(size * size).keys()].filter(
@@ -300,7 +319,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
 
   useMemo(() => console.log("Game State:", gameMode), [gameMode]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (gameMode.mode === "default") {
       setField(() =>
         new Array(size * size).fill(null).map(() => {
@@ -308,13 +327,25 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
         })
       );
     }
-  }, [gameMode.mode, size]);
+
+    return () => {
+      if (gameMode.mode !== "default" && field.length !== size * size) {
+        setGameMode(() => {
+          return { mode: "default", emoji: "unpressed", flags: numOfMines };
+        });
+      }
+    };
+  }, [gameMode.mode, size, numOfMines]);
 
   return useMemo(() => {
     return (
       <div
         className="bg-ms-gray grid"
-        style={{ width: sizeRem, height: sizeRem, gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
+        style={{
+          width: sizeRem,
+          height: sizeRem,
+          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
+        }}
       >
         {field.map((cell, i) => (
           <CellComponent
