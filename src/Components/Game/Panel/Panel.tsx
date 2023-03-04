@@ -39,12 +39,14 @@ export default function PanelComponent({ width, initialFlags }: Props) {
   }
 
   function handleEmojiPointerDown(e: React.PointerEvent) {
-    setGameMode((prev) => {
-      return {
-        ...prev,
-        emoji: "pressed",
-      };
-    });
+    if (e.button === 0) {
+      setGameMode((prev) => {
+        return {
+          ...prev,
+          emoji: "pressed",
+        };
+      });
+    }
   }
 
   return (
