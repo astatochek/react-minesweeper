@@ -10,7 +10,7 @@
     -o-user-drag: none;
   }
 
-  .window {
+  .windows-xp__window {
     box-shadow: inset -1px -1px #00138c, inset 1px 1px #0831d9,
       inset -2px -2px #001ea0, inset 2px 2px #166aee, inset -3px -3px #003bda,
       inset 3px 3px #0855dd;
@@ -20,7 +20,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .title-bar {
+  .windows-xp__title-bar {
     font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
       "Lucida Sans", Tahoma, sans-serif;
     background: linear-gradient(
@@ -34,7 +34,7 @@
       #003dd7 96%,
       #003dd7
     );
-    @apply pt-1 pr-2 pb-1 pl-1 text-sm h-6;
+    @apply pt-1 pr-2 pb-1 pl-1 text-sm h-[1.7rem];
     border-top: 1px solid #0831d9;
     border-left: 1px solid #0831d9;
     border-right: 1px solid #001ea0;
@@ -43,32 +43,29 @@
     text-shadow: 1px 1px #0f1089;
   }
 
-  .title-bar-text {
+  .windows-xp__title-bar-text {
     padding-left: 3px;
-  }
-
-  .title-bar-text {
     @apply font-bold text-white tracking-normal mr-6;
   }
 
-  .window-body {
+  .windows-xp__window-body {
     font-family: "Calibri", sans-serif;
     background-color: rgb(236, 233, 216);
   }
 
-  .windows-xp-bg {
+  .windows-xp__bg {
     background-image: url("https://i.imgur.com/s6BvTke.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
   }
 
-  .windows-xp-btn-wrap {
-    border: 1px solid RGB(1, 63, 102);
+  .windows-xp__btn-wrap {
+    border: 1px solid rgb(1, 63, 102);
     border-radius: 3px;
-    display: inline;
-    /* padding-top: 2px;
-    padding-bottom: 4px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #f6f6f6;
     background: -moz-linear-gradient(
       top,
@@ -109,18 +106,18 @@
 
   }
 
-  .windows-xp-btn {
-    padding: 0 10px 0 10px;
+  .windows-xp__btn {
+    padding: 0 0.5rem 0 0.5rem;
     border: 2px solid transparent;
     background: transparent;
   }
 
-  .windows-xp-btn:hover {
+  .windows-xp__btn:hover {
     outline: 0;
     border: 2px solid #b9d0f0;
   }
 
-  .windows-xp-btn:active {
+  .windows-xp__btn:active {
     background: #dad3c9;
     background: -moz-linear-gradient(
       top,
@@ -158,5 +155,15 @@
       #ffffff 94%,
       #f6f6f6 100%
     );
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    border: 1.5px solid rgb(1, 63, 102);
+    height: 1rem;
+    width: 0.5rem;
+    border-radius: 5px;
+    background: #FFFFFF;
+    cursor: pointer;
+    -webkit-appearance: none;
   }
 }

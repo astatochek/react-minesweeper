@@ -9,7 +9,7 @@ type Props = {
   width: number;
 };
 
-export function RangeComponent({
+export default function RangeComponent({
   title,
   min,
   max,
@@ -17,6 +17,7 @@ export function RangeComponent({
   handler,
   width,
 }: Props) {
+
   function handleChange(e: React.BaseSyntheticEvent) {
     handler(e.target.value);
   }
@@ -39,6 +40,21 @@ export function RangeComponent({
     );
   }
 
+  function inputNumber(width: string) {
+    return (
+      <input
+        type="number"
+        pattern="[0-9]*"
+        min={min}
+        max={max}
+        value={`${current}`}
+        onChange={handleChange}
+        className="!outline-none bg-transparent focus:bg-transparent"
+        style={{ width: width }}
+      ></input>
+    );
+  }
+
   return (
     <>
       {width > 9 ? (
@@ -46,21 +62,17 @@ export function RangeComponent({
           className="flex flex-row justify-between items-center"
           style={{ width: `${width}rem` }}
         >
-          <div className="windows-xp-btn-wrap px-1 py-0">
-            {title}
-          </div>
+          <div className="windows-xp__btn-wrap px-1 py-0">{title}</div>
           {inputRange()}
-          <div className="windows-xp-btn-wrap px-1 py-0">
-            {current}
-          </div>
+          <div className="windows-xp__btn-wrap px-1 py-0">{inputNumber("2.5rem")}</div>
         </div>
       ) : (
         <div
           className="flex flex-col justify-between items-center h-8"
           style={{ width: `${width}rem` }}
         >
-          <div className="windows-xp-btn-wrap px-1 py-0 text-xs">
-            {`${title} : ${current}`}
+          <div className="windows-xp__btn-wrap px-1 py-0 text-[0.6rem]">
+            {`${title}:`} &nbsp; {inputNumber("2rem")}
           </div>
           {inputRange()}
         </div>
