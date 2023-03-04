@@ -47,7 +47,8 @@ export default function RangeComponent({
         pattern="[0-9]*"
         min={min}
         max={max}
-        value={`${current}`}
+        // value={`${current}`}
+        placeholder={`${current}`}
         onChange={handleChange}
         className="!outline-none bg-transparent focus:bg-transparent"
         style={{ width: width }}
