@@ -39,7 +39,7 @@ export default function GameComponent({ cellSize, size, numOfMines }: Props) {
       emoji: "unpressed",
       flags: numOfMines,
     });
-  }, [numOfMines]);
+  }, [size, numOfMines]);
 
   return (
     <>

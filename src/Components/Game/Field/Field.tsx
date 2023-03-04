@@ -327,14 +327,6 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
         })
       );
     }
-
-    return () => {
-      if (gameMode.mode !== "default" && field.length !== size * size) {
-        setGameMode(() => {
-          return { mode: "default", emoji: "unpressed", flags: numOfMines };
-        });
-      }
-    };
   }, [gameMode.mode, size, numOfMines]);
 
   return useMemo(() => {

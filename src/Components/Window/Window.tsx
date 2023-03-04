@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CardComponent from "../Card/Card";
 import GameComponent from "../Game/Game";
 import ClickContext from "../../Context/Click";
@@ -10,6 +10,11 @@ export default function WindowComponent() {
 
   const [fieldSize, setFieldSize] = useState(16);
   const [numOfMines, setNumOfMines] = useState(40);
+
+  const [paramsState, setParamsState] = useState({
+    size: fieldSize,
+    mines: numOfMines,
+  });
 
   function handleFieldSizeChange(val: number) {
     setFieldSize(val);
@@ -36,28 +41,38 @@ export default function WindowComponent() {
         </div>
 
         <div className="window-body flex flex-col justify-center items-center my-0 mx-[3px]">
-          <div>
+          <div className="flex flex-row justify-around items-center w-full py-1 min-h-[3rem]">
             <RangeComponent
               title="Mines"
               min={1}
               max={Math.min(fieldSize * fieldSize - 1, 998)}
               current={numOfMines}
               handler={handleNumOFMinesChange}
+              width={cellSize * paramsState.size / 3}
             />
-          </div>
-          <div>
             <RangeComponent
               title="Size"
               min={10}
               max={40}
               current={fieldSize}
               handler={handleFieldSizeChange}
+              width={cellSize * paramsState.size / 3}
             />
+            <div className="windows-xp-btn-wrap">
+            <button
+              className="windows-xp-btn"
+              onClick={() =>
+                setParamsState({ size: fieldSize, mines: numOfMines })
+              }
+            >
+              Apply
+            </button>
+            </div>
           </div>
           <GameComponent
             cellSize={cellSize}
-            size={fieldSize}
-            numOfMines={numOfMines}
+            size={paramsState.size}
+            numOfMines={paramsState.mines}
           />
         </div>
       </div>
