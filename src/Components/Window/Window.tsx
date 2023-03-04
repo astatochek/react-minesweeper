@@ -75,7 +75,7 @@ export default function WindowComponent() {
               max={40}
               current={fieldSize}
               handler={handleFieldSizeChange}
-              width={(cellSize * paramsState.size) / 3}
+              width={(cellSize * paramsState.size * 2) / 5}
             />
             <div className="windows-xp__btn-wrap">
               <button
