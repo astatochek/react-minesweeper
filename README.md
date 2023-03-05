@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to React-Minesweeper 👋</h1>
+<h1 align="center">React-Minesweeper</h1>
 
 ### ✨ [Demo](https://astatochek.github.io/react-minesweeper/)
 

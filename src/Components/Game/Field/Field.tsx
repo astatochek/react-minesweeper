@@ -3,11 +3,8 @@ import React, {
   useContext,
   useMemo,
   useEffect,
-  useRef,
-  useCallback,
 } from "react";
 import ClickContext from "../../../Context/Click";
-import { CellType } from "../../../Types/Cell";
 import { CellDataType } from "../../../Types/CellData";
 import CellComponent from "./Cell/Cell";
 import { ClickInfoType } from "../../../Types/ClickContext";
@@ -143,8 +140,6 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
   }
 
   function openShiftedCells(fieldData: CellDataType[], cellIndex: number) {
-    if (fieldData[cellIndex].type === "closed flag") {
-    }
 
     const shifts = getShift(cellIndex);
 
@@ -201,7 +196,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
         openNearCells(fieldData, index);
       }
     } else if (type === "right") {
-      let nextCell = { ...cell };
+      const nextCell = { ...cell };
       if (cell.type === "closed flag") {
         nextCell.type = "closed";
         fieldData[index] = nextCell;
@@ -215,7 +210,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
   const initializeField = (firstClickIndex: number): CellDataType[] => {
     const mineIndices = getMineIndices(numOfMines, firstClickIndex);
 
-    let initialField: CellDataType[] = new Array(size * size)
+    const initialField: CellDataType[] = new Array(size * size)
       .fill(null)
       .map(() => {
         return { type: "closed", hasMine: false, minesNear: 0, closed: true };
@@ -279,7 +274,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
   useEffect(() => {
     console.log("Received Click:", clickInfo);
     if (!isValidIndex(clickInfo.index) || gameMode.mode === "over") return;
-    let nextField: CellDataType[] = [...field];
+    const nextField: CellDataType[] = [...field];
     if (gameMode.mode === "default" && clickInfo.type === "left") {
       startGame(nextField, clickInfo);
     } else if (gameMode.mode === "on") {

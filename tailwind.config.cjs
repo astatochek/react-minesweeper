@@ -9,7 +9,6 @@ module.exports = {
       spacing: {
         "ms-22": "0.91rem",
         "ms-24": "1.0rem",
-        "ms-field-size-16x16": "20rem",
         "ms-panel": "2.721rem",
         "ms-counter": "2.126rem",
         "ms-number": "2.16rem",
