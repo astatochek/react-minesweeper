@@ -27,9 +27,11 @@ export default function RangeComponent({
   useEffect(() => setValue(current), [current])
 
   function handleNewInput(e: React.BaseSyntheticEvent) {
+
+    const newValue = Number(e.target.value);
     
-    if (e.target.value >= min && e.target.value <= max) {
-      handler(e.target.value);
+    if (Math.floor(newValue) === newValue && newValue >= min && newValue <= max) {
+      handler(newValue);
     } else {
       setValue(e.target.value);
     }
@@ -62,6 +64,7 @@ export default function RangeComponent({
         max={max}
         value={`${value}`}
         onChange={handleNewInput}
+        onBlur={() => setValue(current)}
         className="!outline-none bg-transparent focus:bg-transparent"
         style={{ width: width }}
       ></input>
