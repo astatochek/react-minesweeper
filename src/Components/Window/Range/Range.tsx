@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   title: string;
@@ -20,6 +20,19 @@ export default function RangeComponent({
 
   function handleChange(e: React.BaseSyntheticEvent) {
     handler(e.target.value);
+  }
+
+  const [value, setValue] = useState(current);
+
+  useEffect(() => setValue(current), [current])
+
+  function handleNewInput(e: React.BaseSyntheticEvent) {
+    
+    if (e.target.value >= min && e.target.value <= max) {
+      handler(e.target.value);
+    } else {
+      setValue(e.target.value);
+    }
   }
 
   function inputRange() {
@@ -47,9 +60,8 @@ export default function RangeComponent({
         pattern="[0-9]*"
         min={min}
         max={max}
-        // value={`${current}`}
-        placeholder={`${current}`}
-        onChange={handleChange}
+        value={`${value}`}
+        onChange={handleNewInput}
         className="!outline-none bg-transparent focus:bg-transparent"
         style={{ width: width }}
       ></input>
