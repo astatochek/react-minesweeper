@@ -4,8 +4,6 @@ import GameContext from "../../../Context/Game";
 import CounterComponent from "./Counter/Counter";
 import EmojiComponent from "./Emoji/Emoji";
 
-import { GameType } from "../../../Types/Game";
-
 type Props = {
   width: string;
   initialFlags: number;
@@ -18,14 +16,22 @@ export default function PanelComponent({ width, initialFlags }: Props) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (gameMode.mode === "on" && displayedTime < 999) {
-        setDisplayedTime((prev) => prev + 1);
-      }
+      setDisplayedTime((prev) =>
+          gameMode.mode === "on" && prev < 999 ? prev + 1 : prev
+        );
     }, 1000);
     return () => clearInterval(interval);
   }, [gameMode.mode]);
 
   useMemo(() => setDisplayedTime(() => 0), [width, initialFlags]);
+
+  // useMemo(() => {
+  //   if (displayedTime === 999) {
+  //     setGameMode((prev) => {
+  //       return { ...prev, mode: "over", emoji: "lose" };
+  //     });
+  //   }
+  // }, [displayedTime]);
 
   function handleEmojiCLick() {
     setGameMode(() => {
