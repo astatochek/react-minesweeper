@@ -2,18 +2,41 @@
 
 ## ✨ [Demo](https://astatochek.github.io/react-minesweeper/)
 
-## Install
+## Clone the Repository
 
-```sh
-npm install
+```bash
+git clone https://github.com/astatochek/react-minesweeper.git
 ```
 
 ## Usage
 
-```sh
+Install the dependencies:
+
+```bash
+cd react-minesweeper
+npm install
+```
+
+Run dev server:
+
+> Be sure to have the latest `node` version.
+
+```bash
+npm run dev
+```
+
+## Production version
+
+To generate the production version, you can run:
+
+```bash
 npm run build
 ```
 
-```sh
+All files you have to deploy will be located at the dist directory.
+
+### Run production version locally
+
+```bash
 npm run preview
 ```
