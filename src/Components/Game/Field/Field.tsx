@@ -121,7 +121,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
           minesNear: 0,
           closed: false,
         };
-      } else if (cell.type === "closed flag") {
+      } else if (cell.type === "flag") {
         fieldData[i] = {
           type: "mine wrong",
           hasMine: false,
@@ -146,7 +146,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     let flagsNear = 0;
 
     shifts.forEach((shift) => {
-      if (fieldData[cellIndex + shift].type === "closed flag") {
+      if (fieldData[cellIndex + shift].type === "flag") {
         flagsNear++;
       }
     });
@@ -158,7 +158,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
     let mineIndex = -1;
     shifts.forEach((shift) => {
       const cell = fieldData[cellIndex + shift];
-      if (cell.type !== "closed flag") {
+      if (cell.type !== "flag") {
         if (cell.hasMine) {
           mineIndex = cellIndex + shift;
         } else if (cell.minesNear === 0) {
@@ -197,11 +197,11 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
       }
     } else if (type === "right") {
       const nextCell = { ...cell };
-      if (cell.type === "closed flag") {
+      if (cell.type === "flag") {
         nextCell.type = "closed";
         fieldData[index] = nextCell;
       } else if (cell.type === "closed" && flags.length < numOfMines) {
-        nextCell.type = "closed flag";
+        nextCell.type = "flag";
         fieldData[index] = nextCell;
       }
     }
@@ -238,7 +238,7 @@ export default function FieldComponent({ sizeRem, size, numOfMines }: Props) {
   function calcFlags(nextField: CellDataType[]) {
     return [...Array(size * size).keys()].filter(
       (i) =>
-        nextField[i].type === "closed flag" ||
+        nextField[i].type === "flag" ||
         nextField[i].type === "mine wrong"
     );
   }

@@ -1,6 +1,6 @@
 <h1 align="center">React-Minesweeper</h1>
 
-### ✨ [Demo](https://astatochek.github.io/react-minesweeper/)
+## ✨ [Demo](https://astatochek.github.io/react-minesweeper/)
 
 ## Install
 

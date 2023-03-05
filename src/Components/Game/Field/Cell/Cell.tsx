@@ -46,7 +46,7 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
       case "closed":
         return closed;
       case "closed flag":
-        closedFlag;
+        return closedFlag;
       case "flag":
         return flag;
       case "mine":
@@ -95,12 +95,12 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
         });
         break;
       case 2:
-        if (type === "closed flag") {
+        if (type === "flag") {
           setType(() => "question");
           setTimeout(() => {
             setType((prev) => {
               if (prev === "question") {
-                return "closed flag";
+                return "flag";
               }
               return prev;
             })
@@ -113,7 +113,7 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
   }
 
   function handleClickEvent() {
-    if (cell.type !== "closed flag") {
+    if (cell.type !== "flag") {
       handleClick(index, "left");
     }
   }
@@ -130,27 +130,11 @@ export default function CellComponent({ cell, index, handleClick }: Props) {
     }
   }
 
-  // return useMemo(
-  //   () => (
-  //     <div
-  //       className="h-ms-cell"
-  //       onClick={clickable ? handleClickEvent : () => {}}
-  //       onPointerDown={clickable ? handlePointerDown : () => {}}
-  //       // onPointerEnter={handlePointerEnter}
-  //       onPointerOut={handlePointerOut}
-  //     >
-  //       <img className="h-full" src={getImageSource(type)}></img>
-  //     </div>
-  //   ),
-  //   [cell, index, handleClick, type, clickable]
-  // );
-
   return (
     <div
       className="h-ms-cell"
-      onClick={clickable ? handleClickEvent : () => {}}
-      onPointerDown={clickable ? handlePointerDown : () => {}}
-      // onPointerEnter={handlePointerEnter}
+      onClick={clickable ? handleClickEvent : undefined}
+      onPointerDown={clickable ? handlePointerDown : undefined}
       onPointerOut={handlePointerOut}
     >
       <img className="h-full" src={getImageSource(type)}></img>
